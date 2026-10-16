@@ -1,0 +1,15 @@
+[include]
+	path = ~/.gitconfig-personal
+[includeIf "gitdir:~/Cohesiv/"]
+	path = ~/.gitconfig-work
+[user]
+	name = Sravan Suresh
+	email = sravansuresh@Sravans-MacBook-Air.local
+[pull]
+	rebase = false
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential

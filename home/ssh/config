@@ -1,0 +1,19 @@
+IgnoreUnknown UseKeychain
+
+# Personal is the default when the host is literally github.com
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/github_personal
+  IdentitiesOnly yes
+  AddKeysToAgent yes
+  UseKeychain yes
+
+# Work GitHub uses an alias host
+Host github-work
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/github_work
+  IdentitiesOnly yes
+  AddKeysToAgent yes
+  UseKeychain yes

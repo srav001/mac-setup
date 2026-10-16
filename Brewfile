@@ -1,0 +1,8 @@
+brew "opencode"
+brew "gh"
+brew "neovim"
+brew "ripgrep"
+brew "fd"
+brew "fzf"
+brew "lazygit"
+brew "ffmpeg"

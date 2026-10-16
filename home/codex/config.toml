@@ -1,0 +1,27 @@
+model_instructions_file = "__HOME__/.codex/instructions/minimal-codex.md"
+model = "gpt-6.1-sol"
+model_reasoning_effort = "medium"
+model_verbosity = "low"
+model_reasoning_summary = "detailed"
+web_search = "live"
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
+personality = "none"
+approvals_reviewer = "guardian_subagent"
+service_tier = "priority"
+
+[features]
+async_compaction = true
+hooks = true
+apply_patch_freeform = true
+shell_tool = true
+unified_exec = true
+undo = true
+steer = true
+multi_agent = true
+multi_agent_v2 = true
+prevent_idle_sleep = true
+goals = true
+terminal_resize_reflow = true
+js_repl = false
+chronicle = false
