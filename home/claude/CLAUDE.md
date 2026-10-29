@@ -110,6 +110,7 @@ We should always strive to make the code as simple as possible, have least code 
 
 When the user asks to open or view a file:
 
-- Text files (code, Markdown, JSON, YAML, logs, config, etc.): open them in Neovim inside the Rex app, one new Rex window per file. Example:
-  `open -a "Rex Beta" && "/Applications/Rex Beta.app/Contents/Helpers/Rex Server.app/Contents/MacOS/rex" run --label AGENTS.md -- nvim /Users/sravan/Cohesiv/cw-agents/AGENTS.md`
+- Text files (code, Markdown, JSON, YAML, logs, config, etc.): use the installed Rex Neovim opener. It opens each file visibly in Neovim in its own Rex session/window. Example:
+  `open -a "$HOME/Applications/Rex Neovim.app" /absolute/path/to/file.md`
+- Rex Remote Control must be enabled in Rex > Settings > Server for automatic file-session selection. If it is disabled, explain why and ask before enabling it. Do not hardcode a Rex helper inside `/Applications/Rex Beta.app` or assume the caller has Rex's terminal environment.
 - Everything else (images, videos, audio, PDFs, etc.): use `open <file>` so it opens in Preview, QuickTime or its default app.

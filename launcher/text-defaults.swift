@@ -2,38 +2,45 @@ import AppKit
 import UniformTypeIdentifiers
 
 let app = URL(fileURLWithPath: NSHomeDirectory() + "/Applications/Rex Neovim.app")
+let bundleID = "com.sravan.rex-neovim"
+let dryRun = CommandLine.arguments.contains("--dry-run")
 let extensions = [
     "txt", "md", "mdx", "markdown", "json", "jsonc", "yaml", "yml", "toml", "xml", "plist", "log",
     "csv", "tsv", "ini", "conf", "cfg", "env", "lock", "gitignore", "sh", "zsh", "py", "lua",
-    "js", "mjs", "cjs", "jsx", "ts", "cts", "tsx", "c", "h", "swift", "go", "rs", "sql", "css",
-    "graphql", "vue", "svelte",
+    "js", "mjs", "cjs", "jsx", "ts", "mts", "cts", "tsx", "c", "h", "cpp", "hpp", "swift",
+    "go", "rs", "sql", "css", "scss", "sass", "less", "html", "htm", "graphql", "vue", "svelte",
+    "bash", "fish", "rb", "php", "java", "kt", "kts", "cs", "ex", "exs", "erl", "hrl",
+    "r", "rmd", "jl", "pl", "pm", "ps1", "bat", "cmd", "tex", "bib", "rst", "adoc",
+    "editorconfig", "gitconfig", "gitattributes", "dockerignore", "properties", "ipynb",
 ]
 
-let probe = FileManager.default.temporaryDirectory.appendingPathComponent("rex-neovim-probe")
-try? FileManager.default.createDirectory(at: probe, withIntermediateDirectories: true)
-var types = Set<UTType>()
-for ext in extensions {
-    let file = probe.appendingPathComponent("probe.\(ext)")
-    FileManager.default.createFile(atPath: file.path, contents: nil)
-    if NSWorkspace.shared.urlForApplication(toOpen: file) != app,
-       let type = try file.resourceValues(forKeys: [.contentTypeKey]).contentType {
-        types.insert(type)
-    }
-}
-try? FileManager.default.removeItem(at: probe)
+let types = Set([UTType.text, .plainText, .sourceCode] + extensions.compactMap {
+    UTType(filenameExtension: $0, conformingTo: .text)
+})
 
-if !types.isEmpty { print("Click Change in each of the \(types.count) dialogs macOS shows.") }
+if !dryRun { print("Click Change in each file-type dialog macOS shows.") }
 var failed = false
-let group = DispatchGroup()
-for type in types {
-    group.enter()
-    NSWorkspace.shared.setDefaultApplication(at: app, toOpen: type) { error in
-        if let error {
-            print("Not set: \(type.identifier): \(error.localizedDescription)")
-            failed = true
+for type in types.sorted(by: { $0.identifier < $1.identifier }) {
+    let current = LSCopyDefaultRoleHandlerForContentType(type.identifier as CFString, .all)?
+        .takeRetainedValue() as String?
+    if dryRun {
+        print("\(current == bundleID ? "Already set" : "Would set"): \(type.identifier)")
+        continue
+    }
+    if current == bundleID { continue }
+    do {
+        try await withCheckedThrowingContinuation { (completion: CheckedContinuation<Void, Error>) in
+            NSWorkspace.shared.setDefaultApplication(at: app, toOpen: type) { error in
+                if let error {
+                    completion.resume(throwing: error)
+                } else {
+                    completion.resume()
+                }
+            }
         }
-        group.leave()
+    } catch {
+        print("Not set: \(type.identifier): \(error.localizedDescription)")
+        failed = true
     }
 }
-group.wait()
 exit(failed ? 1 : 0)
