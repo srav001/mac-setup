@@ -42,12 +42,11 @@ Use subagents to speed up work. You are the orchestrator: you own the core work,
   - Implementation and tests: high effort.
 - Sonnet 5.5 (`sonnet`) only rarely, when user specifically asks, for work needing stronger reasoning, such as complex implementations, at high effort.
 - Never go above high for sonnet and above xhigh for haiku.
-- GPT workers (`use-gpt-worker` skill): GPT-6.1 Sol for higher-complexity coding work; GPT-6.1 Terra for computer use (medium; high only for very complex flows). Default tier; fast tier only when the user asks.
 - A request to use GPT workers (Sol, Terra) as the main or only subagents, or to use many subagents, applies only to the current session. Never save it to memory or to any CLAUDE.md.
 - Do these yourself, without subagents, because it is faster: quick fixes, small or core changes, and heavy UI work.
 - Otherwise either delegate every part and closely monitor and correct each agent, or do one part yourself while agents do the others.
 - Brief each subagent with the exact scope, files, constraints and expected report. For complex or tricky logic, give pseudocode of the intended design; never leave the design to the subagent. For tests, list the scenarios to cover (the subagent may add more).
-- Subagents (Haiku mostly, Sol for complex coding, Sonnet only on request) implement and test changes. Run the core and main simulations yourself; delegate the other cases and double-checks to Haiku 
+- Subagents (Haiku mostly or Sonnet rarely, by complexity) implement and test changes. Run the core and main simulations yourself; delegate the other cases and double-checks to Haiku 
 
 ### 2. Validate and prove (the key step)
 
