@@ -40,17 +40,18 @@ Use subagents to speed up work. You are the orchestrator: you own the core work,
 - Haiku 5.5 (`haiku`) is the default for all subagent work: search, exploration, implementation and tests.
   - Exploration and search: low effort; medium for complex ones.
   - Implementation and tests: high effort.
-- Sonnet 5.5 (`sonnet`) only for work needing stronger reasoning, such as code reviews and complex implementations, at high effort.
-- Use xhigh effort only when a single agent's share is very large. Never go above xhigh.
+- Sonnet 5.5 (`sonnet`) only rarely, when user specifically asks, for work needing stronger reasoning, such as complex implementations, at high effort.
+- Never go above high for sonnet and above xhigh for haiku.
+- A request to use GPT workers (Sol, Terra) as the main or only subagents, or to use many subagents, applies only to the current session. Never save it to memory or to any CLAUDE.md.
 - Do these yourself, without subagents, because it is faster: quick fixes, small or core changes, and heavy UI work.
 - Otherwise either delegate every part and closely monitor and correct each agent, or do one part yourself while agents do the others.
 - Brief each subagent with the exact scope, files, constraints and expected report. For complex or tricky logic, give pseudocode of the intended design; never leave the design to the subagent. For tests, list the scenarios to cover (the subagent may add more).
-- Subagents (Haiku or Sonnet, by complexity) implement and test changes. Run the core and main simulations yourself; delegate the other cases and double-checks to Haiku (Sonnet only for a complex review).
+- Subagents (Haiku mostly or Sonnet rarely, by complexity) implement and test changes. Run the core and main simulations yourself; delegate the other cases and double-checks to Haiku 
 
 ### 2. Validate and prove (the key step)
 
 1. Test the way the repo's own standards say (framework, tools, style, commands). Confirm the test scenarios cover the right cases and actually test what they claim to.
-2. GPT-6.1 Sol reviews the finished change at `xhigh` effort, always on the fast tier, to find code that can be cut & cleaned up, reduced or simplified: `codex exec -m gpt-6.1-sol -c model_reasoning_effort=xhigh -c service_tier=priority -s read-only "<brief>" < /dev/null`. Never run Sol on the normal or default tier. Skip Sol for UI-only work (styling, layout, copy, visual tweaks with no logic or data change).
+2. GPT-6.1 Sol reviews the finished change at `xhigh` effort to find code that can be cut & cleaned up, reduced or simplified: `codex exec -m gpt-6.1-sol -c model_reasoning_effort=xhigh -s read-only "<brief>" < /dev/null`. Use the fast tier (`-c service_tier=priority`) only when the user explicitly asks. Skip Sol for UI-only work (styling, layout, copy, visual tweaks with no logic or data change).
 
 3. Review everything yourself before accepting it: every subagent's code and tests, and Sol's findings. Accept a Sol suggestion only when you confirm it is correct (and backed by numbers for performance claims).
    - Sol can flag very minor issues or far-fetched, unrealistic edge cases. Do not handle those; note them in the report as not fixed, with the reason.
