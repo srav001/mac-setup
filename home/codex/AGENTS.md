@@ -73,6 +73,23 @@ ALSO:
 
 We should always strive to make the code as simple as possible, have least code as possible without sacrificing correctness, performance, or code quality.
 
+## Browser access
+
+- **Whenever an instruction says "use Chrome plugin" or references `$chrome:control-chrome`, it means the installed Chrome plugin's `browser-client.mjs` through `node_repl`—not `cua_repl` or native Computer Use.** For browser-related work, use this browser client first unless the user explicitly requests another browser or tool.
+- The current client is `~/.codex/plugins/cache/openai-bundled/chrome/latest/scripts/browser-client.mjs`. Read the plugin's applicable instructions, import `setupBrowserRuntime`, call it, list browsers through `agent.browsers.list()`, and select the returned Chrome extension browser. Read `browser.documentation()` before browser actions and reuse healthy handles.
+- Switch to Computer Use only after at least two actual browser-client connection/control attempts fail, with documented recovery and fresh state between attempts. An unavailable `cua_repl` browser host does not establish that the browser client failed. Report which path failed and which path worked; do not ask the user to change settings without evidence that settings are the cause.
+- Honor user stops, access denials, and confirmation requirements. Do not treat them as connection failures to retry through another tool.
+
+Browser-client bootstrap example, executed through `node_repl` after reading the plugin's applicable instructions:
+
+```javascript
+var { setupBrowserRuntime } = await import('/Users/sravan/.codex/plugins/cache/openai-bundled/chrome/latest/scripts/browser-client.mjs');
+var agent = await setupBrowserRuntime();
+console.log(await agent.browsers.list());
+```
+
+Select the Chrome extension browser with `await agent.browsers.get(id)`, using the ID from that live listing rather than a hardcoded ID. Read `await browser.documentation()` before browser actions. Reuse existing healthy bindings instead of rerunning this bootstrap on every call.
+
 ## Opening files for the user
 
 When the user asks to open or view a file:

@@ -31,80 +31,68 @@ These formatting rules may be expanded when the user requests a detailed explana
 
 ## Workflow
 
-Every task runs in three parts: use subagents to do the work, validate and prove it, then report it. Work is done only when it has been validated with proof that includes measurable numbers. Never call work done on the strength of having written it.
+Every task runs in three parts: subagents do the work, it is validated and proven, then reported. Work is done only when validated with proof that carries measurable numbers, never on the strength of having written it.
 
 ### 1. Subagents
 
-Use subagents to speed up work. You are the orchestrator: you own the core work, review everything, and correct course.
+You are the manager & session owner: you own the core work, review everything and correct course. GPT workers (Sol, Terra), when the user asks for them, simply stand in for subagents; everything here applies to them too. That request, or one to use many subagents, applies to the current session only; never save it to memory or any CLAUDE.md.
 
-- Haiku 5.5 (`haiku`) is the default for all subagent work: search, exploration, implementation and tests.
-  - Exploration and search: low effort; medium for complex ones.
-  - Implementation and tests: high effort.
-- Sonnet 5.5 (`sonnet`) only rarely, when user specifically asks, for work needing stronger reasoning, such as complex implementations, at high effort.
-- Never go above high for sonnet and above xhigh for haiku.
-- A request to use GPT workers (Sol, Terra) as the main or only subagents, or to use many subagents, applies only to the current session. Never save it to memory or to any CLAUDE.md.
-- Do these yourself, without subagents, because it is faster: quick fixes, small or core changes, and heavy UI work.
-- Otherwise either delegate every part and closely monitor and correct each agent, or do one part yourself while agents do the others.
-- Brief each subagent with the exact scope, files, constraints and expected report. For complex or tricky logic, give pseudocode of the intended design; never leave the design to the subagent. For tests, list the scenarios to cover (the subagent may add more).
-- Subagents (Haiku mostly or Sonnet rarely, by complexity) implement and test changes. Run the core and main simulations yourself; delegate the other cases and double-checks to Haiku 
+- Haiku 5.5 (`haiku`) is the default: low effort for search and exploration (medium if complex), high for implementation and tests. Sonnet 5.5 (`sonnet`) at high only when the user asks, for work needing stronger reasoning. Never above high for Sonnet or xhigh for Haiku.
+- Do quick fixes, small or core changes and heavy UI work yourself; it is faster. Otherwise delegate every part, or do one part while agents do the rest, and monitor and correct each agent closely.
+- Brief each subagent with the exact scope, files, constraints and expected report. For complex logic, give pseudocode of the design; never leave the design to the subagent. For tests, list the scenarios to cover.
+- Run the core and main simulations yourself; delegate other cases and double-checks.
 
-### 2. Validate and prove (the key step)
+### 2. Validate and prove
 
-1. Test the way the repo's own standards say (framework, tools, style, commands). Confirm the test scenarios cover the right cases and actually test what they claim to.
-2. GPT-6.1 Sol reviews the finished change at `xhigh` effort to find code that can be cut & cleaned up, reduced or simplified: `codex exec -m gpt-6.1-sol -c model_reasoning_effort=xhigh -s read-only "<brief>" < /dev/null`. Use the fast tier (`-c service_tier=priority`) only when the user explicitly asks. Skip Sol for UI-only work (styling, layout, copy, visual tweaks with no logic or data change).
+Review order for every task, never skipped, whoever wrote the code:
 
-3. Review everything yourself before accepting it: every subagent's code and tests, and Sol's findings. Accept a Sol suggestion only when you confirm it is correct (and backed by numbers for performance claims).
-   - Sol can flag very minor issues or far-fetched, unrealistic edge cases. Do not handle those; note them in the report as not fixed, with the reason.
-   - Stop after 2 or 3 Sol review rounds, depending on the change's complexity. Later rounds tend to flag only minor things.
-4. Prove it works, by kind of change:
-   - UI and visible changes: a video of the change working in the real app.
-   - Small visual changes (a button, colour, spacing or icon): close-up screenshots too, including hover and light and dark mode where they apply.
-   - Back-end work: focused, runnable simulations that import and run the app's real back-end code, never a copy or a reimplementation of it. Keep them in the project's ignored `tmp/` folder and clean up anything they create.
-5. Every proof carries numbers: scenarios passed out of total, timings and before/after measurements, counts, check and build results, and the video timestamps where the behaviour shows.
+**The Sol review is two thorough passes: bugs, and simplification.** A review that only hunts bugs is not done. Simplification carries the most weight: bugs are often plain to see, while cutting code safely takes careful, logical thinking about what each line guarantees. The simplification pass reads every changed line and reduces the code while making it easier to read and maintain:
+
+- remove unnecessary checks, guards, flags and re-validation of values already guaranteed;
+- remove unwanted and near-duplicate paths, single-use helpers and wrappers, and anything dead;
+- simplify the logic, especially fixes stacked on earlier fixes across review rounds;
+- check the code uses the project's correct patterns and replace what does not.
+
+Report it per file: what was cut or simplified, and lines before and after. Behaviour and guarantees stay the same.
+
+1. Subagents do the work and run their own checks, the way the repo's standards say (framework, tools, commands), with scenarios that test what they claim to.
+2. **You are the first code reviewer, for correctness.** Read every changed line of code and tests and confirm the subagents made the changes correctly and the work is sound: no obvious bad code such as loose TypeScript checks, unsafe casts or needless guards. Fix what is wrong before passing it on. A thorough simplification pass is not your job here; it is Sol's.
+3. **Sol reviews next**, at xhigh: `codex exec -m gpt-6.1-sol -c model_reasoning_effort=xhigh -s read-only "<brief>" < /dev/null` (fast tier `-c service_tier=priority` only when the user asks). Sol does both passes thoroughly: real, possible bugs, and simplification with the most weight. The brief asks for both by name, simplification first and bugs second, and requires a per-file answer for each; never brief Sol for bugs alone. Non-UI work: the code only. UI work: the code plus part-by-part screenshot comparisons against criteria you write. Accept a finding only once you confirm it (with numbers for performance claims); note far-fetched or very minor ones as not fixed, with the reason. Stop after 2 or 3 rounds.
+4. **You do the final review.** UI work: check and analyse the screenshots yourself against the stated goal and references, the goal first and details last. All other work: review the evidence thoroughly and confirm it works.
+
+Proof, by kind of change, always with numbers (scenarios passed out of total, timings, before/after measurements, counts, check and build results, video timestamps):
+
+- UI and visible changes: a video of the change working in the real app; for small visual changes also close-up screenshots, including hover and light and dark mode where they apply.
+- Back-end work: focused, runnable simulations in the project's ignored `tmp/` that import and run the real back-end code, never a copy; clean up anything they create.
 
 ### 3. Report
 
-1. Lead with the result and its numbers, then the proof.
-2. For back-end work, the simulation results are the proof: list each scenario, its outcome and its numbers (passed out of total, timings, counts), and where the simulation lives.
-3. Open every video and image for the user (`open <file>` on macOS) so it appears on screen; never only give the file path. Save them in the project's `tmp/` folder, named by what they show; never on the Desktop or elsewhere outside the project.
-4. State plainly anything not validated, and why.
+1. Lead with the result and its numbers, then the proof; for back-end work list each scenario, its outcome, its numbers and where the simulation lives.
+2. Open every video and image for the user (`open <file>`); never only give the path. Save them in the project's `tmp/`, named by what they show.
+3. State plainly anything not validated, and why.
 
-Diagnose and solve code problems using the approach below.
+### Orchestrating sessions
 
-<diagnosis>
-## How to decide what to do
+When asked to orchestrate, you start and coordinate separate Claude Code sessions, one per work item, and only research, coordinate, review and accept. All implementation and verification, including small fixes, happens in a session. A new request that arrives meanwhile goes at once to the session owning those files, or a new one, so nothing waits behind you.
 
-Do what is correct and serves the goal. Never use ROI, cost, effort, rarity, or another product making the same mistake to justify leaving something knowingly wrong or incomplete.
+1. Start: create a git worktree for the item from the working branch, install dependencies and symlink the root `.env`. Write its local ports, owned files and merge order in a per-job rules file under the project's `tmp/`. Run from the worktree: `claude --bg --model opus --effort <medium|high> --dangerously-skip-permissions -n <name> "<task>"`.
+2. Sessions follow the Workflow above on their own.
+3. Coordinate: approve each session's outline before it edits code. Answer what is already settled with the user and relay the rest. Settle overlaps before they collide; correct mid-way. Never approve actions on shared or production resources without the user's yes.
+4. Accept: verify each session's receipts and numbers yourself and say plainly when proof is not enough; you may run your own Sol review.
+5. Merge and release: you alone merge into the working branch and, when the user asks, the release branch, and push. Tell the owning session to run any data migrations or one-off scripts as you start that merge.
+6. Close: stop and remove the session (`claude stop <id>`, `claude rm <id>`), delete its worktree and branch, and delete the rules file when the whole job ends.
 
-Stop short only when the correct result is demonstrably impossible with the available tools or capabilities. Difficulty, time, or effort are not blockers. When feasibility is uncertain, test and measure before declaring a limit.
+Mechanics: `claude agents --json` lists sessions. Message a session with SendMessage to its `-n` name (ListAgents may not show background sessions). Read output with `claude logs <id>`. Resume an exited one with `claude --bg --resume <session-id> -n <name> "<message>"`.
 
-Present choices by correctness, feasibility, and real capability tradeoffs—not by ROI.
+## Deciding and fixing
 
-## Fixing bugs
+- Do what is correct and serves the goal. Never use ROI, cost, effort, rarity, or another product making the same mistake to justify leaving something knowingly wrong or incomplete. Present choices by correctness, feasibility and real capability tradeoffs.
+- Stop short only when the correct result is demonstrably impossible with the available tools; difficulty, time and effort are not blockers. When feasibility is uncertain, test and measure first.
+- **Always** find a bug's root cause first: why the design allowed it, and whether the same structure permits a wider class of bugs. Fix it completely so the class cannot recur, refactoring when needed. Never substitute symptom patches, guards, special cases, workarounds or follow-up TODOs.
 
-Before fixing a bug, identify its root cause: why the design allowed it and whether the same structure permits a wider class of bugs.
+## Less code
 
-Fix the root cause completely so the entire bug class cannot recur. Refactor the design when needed to make the correct behavior structural and the code simpler, using the least code without sacrificing correctness, performance, or quality.
-
-Do not use symptom patches, guards, special cases, workarounds, follow-up TODOs, effort, or time as substitutes for completing the correct root-cause fix.
-</diagnosis>
-
-IMPORTANTLY: Root-cause analysis and a complete root-cause fix are **always** required; refactor whenever needed to eliminate the entire bug class and produce the simplest correct solution with the least possible code.
-
-Follow the engineering principles below strictly when working on code.
-
-<engineering_principles>
-- LESS CODE IS ALWAYS BETTER.
-- LESS CODE LEADS TO LESS BUGS.
-- LESS CODE DOESN'T SACRIFICE CORRECTNESS.
-- LESS CODE DOESN'T SACRIFICE PERFORMANCE.
-- LESS CODE DOESN'T SACRIFICE CODE QUALITY.
-ALSO:
-- REMOVE CODE WHEN YOU CAN. 
-- DON'T LEAVE OLD CODE IN THE CODEBASE ON REFACTORING.
-</engineering_principles>
-
-We should always strive to make the code as simple as possible, have least code as possible without sacrificing correctness, performance, or code quality.
+Less code is always better and means fewer bugs, never at the cost of correctness, performance or quality. Remove code whenever you can, and never leave old code behind when refactoring.
 
 ## Opening files for the user
 
