@@ -75,6 +75,7 @@ We should always strive to make the code as simple as possible, have least code 
 
 ## Browser access
 
+- **When the user mentions Chrome, they mean Ardia.** Open links and perform browser work in Ardia unless the user explicitly requests a different browser. References below to the Chrome plugin/client describe the tooling, not a preference for the Google Chrome app.
 - **Whenever an instruction says "use Chrome plugin" or references `$chrome:control-chrome`, it means the installed Chrome plugin's `browser-client.mjs` through `node_repl`—not `cua_repl` or native Computer Use.** For browser-related work, use this browser client first unless the user explicitly requests another browser or tool.
 - The current client is `~/.codex/plugins/cache/openai-bundled/chrome/latest/scripts/browser-client.mjs`. Read the plugin's applicable instructions, import `setupBrowserRuntime`, call it, list browsers through `agent.browsers.list()`, and select the returned Chrome extension browser. Read `browser.documentation()` before browser actions and reuse healthy handles.
 - Switch to Computer Use only after at least two actual browser-client connection/control attempts fail, with documented recovery and fresh state between attempts. An unavailable `cua_repl` browser host does not establish that the browser client failed. Report which path failed and which path worked; do not ask the user to change settings without evidence that settings are the cause.
