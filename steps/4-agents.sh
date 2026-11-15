@@ -10,6 +10,7 @@ link() { # repo file, home file
 
 link claude/CLAUDE.md "$HOME/.claude/CLAUDE.md"
 link claude/settings.json "$HOME/.claude/settings.json"
+link claude/skills/use-gpt-worker "$HOME/.claude/skills/use-gpt-worker"
 link codex/AGENTS.md "$HOME/.codex/AGENTS.md"
 link codex/instructions/minimal-codex.md "$HOME/.codex/instructions/minimal-codex.md"
 # EDGE_CASE: Codex rewrites config.toml itself, so it gets a copy of the basics once.

@@ -21,7 +21,7 @@ This repo sets up the user's Mac. `./setup.sh` runs `steps/*.sh` in order and lo
 
 - `ssh -T git@github.com` greets `srav001`; `ssh -T git@github-work` greets `sravan-fb`.
 - `mdutil -as` reports indexing disabled on every volume.
-- `ls -l ~/.claude/CLAUDE.md ~/.codex/AGENTS.md` shows links into `home/`.
+- `ls -l ~/.claude/CLAUDE.md ~/.claude/skills/use-gpt-worker ~/.codex/AGENTS.md` shows links into `home/`.
 - `bash -n steps/5-rex-neovim.sh` and `swift launcher/text-defaults.swift --dry-run` check the file-opening setup without changing defaults. Never claim `public.data` or bind a video/image type to Neovim just because an extension also represents code.
 
 Files in `home/` are linked into the home folder, so edits on the Mac change this repo. Never add tokens, `~/.codex/auth.json`, `~/.claude.json` or SSH private keys to it.
