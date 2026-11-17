@@ -35,3 +35,16 @@ swift launcher/text-defaults.swift --dry-run
 To replace a key, delete it (`rm ~/.ssh/github_personal*` or `~/.ssh/github_work*`), remove the old key at github.com/settings/keys, and re-run `./setup.sh`. It creates a new key and adds it to the right account.
 
 See [MANUAL.md](MANUAL.md) for what a script cannot do.
+
+## Tinycast updates
+
+Tinycast 0.12.15 is signed by its developer and notarized by Apple; it does not need to be self-signed or have quarantine removed. Check a future release before changing its security settings:
+
+```sh
+codesign -dv --verbose=2 /Applications/Tinycast.app
+spctl --assess --type execute --verbose /Applications/Tinycast.app
+```
+
+Pin the installed Homebrew cask with `brew pin --cask tinycast`. To update it deliberately, run `brew unpin --cask tinycast`, `brew upgrade --cask tinycast`, then pin it again. A Homebrew pin does not stop Tinycast's own updater; disable automatic update checks in Tinycast settings too.
+
+Older releases such as 0.11.19 were self-signed, rather than Apple-notarized. If a trusted release cannot open and you deliberately accept the risk, its developer's documented workaround is `xattr -dr com.apple.quarantine /Applications/Tinycast.app`. This removes macOS's quarantine protection; it does not sign the app or verify it is safe. Check the download and release details before using it.
