@@ -17,7 +17,7 @@ GPT workers are the default subagents for every task, without the user asking. U
 
    | Model | Effort | When |
    | --- | --- | --- |
-   | `gpt-6.2-sol` | `low` | all search, exploration and research (it replaces Terra `medium` there and is at least as good), and small edits |
+   | `gpt-6.2-sol` | `low` | all search, exploration and research, and small edits |
    | `gpt-6.2-sol` | `medium` | normal work without computer use: implementation, tests |
    | `gpt-6.2-sol` | `high` | after a Sol `medium` worker's output is bad or it fails twice on the same job |
    | `gpt-6.2-sol` | `xhigh` | every review, always |
