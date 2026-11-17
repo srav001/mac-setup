@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Fire-and-forget parallel `codex exec` runs (independent checks / edge cases).
-// Usage: gpt-batch.mjs <jobs.json> <outDir> --cwd C --model gpt-6.1-terra|gpt-6.1-sol --effort medium|high|xhigh [--fast] [--max N] [--timeout SEC]
+// Usage: gpt-batch.mjs <jobs.json> <outDir> --cwd C --model gpt-6.1-terra|gpt-6.2-sol --effort low|medium|high|xhigh [--fast] [--max N] [--timeout SEC]
 // jobs.json: [{ "id": "case-1", "prompt": "..." }, ...]
 // Writes <outDir>/<id>.txt (final message), .jsonl (events), .err, and <outDir>/summary.json.
 // Exit 0 only if every job exited 0. Ctrl-C / SIGTERM kills every running job (whole process groups).

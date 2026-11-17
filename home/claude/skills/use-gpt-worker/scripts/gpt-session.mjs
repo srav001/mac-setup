@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Persistent Codex app-server session for a GPT worker. Usage: gpt-session.mjs <cmd> <dir> [args]
-//   start <dir> --cwd C --model gpt-6.1-terra|gpt-6.1-sol --effort medium|high|xhigh [--fast]   start server + thread
+//   start <dir> --cwd C --model gpt-6.1-terra|gpt-6.2-sol --effort low|medium|high|xhigh [--fast]   start server + thread
 //   send <dir> "text" [--timeout SEC]   run a turn until it ends; prints only its final message (events go to events.log; default timeout 1800s)
 //   steer <dir> "text"                  add guidance to the running turn
 //   interrupt <dir>                     stop the running turn

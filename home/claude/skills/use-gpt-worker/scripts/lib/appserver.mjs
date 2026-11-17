@@ -57,8 +57,8 @@ export function reapOrphans(known) {
 
 // Validate the flags shared by gpt-session and gpt-batch. Returns the service tier: fast (priority) only with --fast.
 export function checkRun({ model, effort, cwd, fast }) {
-  if (!['gpt-6.1-terra', 'gpt-6.1-sol'].includes(model)) throw new Error('--model must be gpt-6.1-terra or gpt-6.1-sol');
-  if (!['medium', 'high', 'xhigh'].includes(effort)) throw new Error('--effort must be medium, high or xhigh');
+  if (!['gpt-6.1-terra', 'gpt-6.2-sol'].includes(model)) throw new Error('--model must be gpt-6.1-terra or gpt-6.2-sol');
+  if (!['low', 'medium', 'high', 'xhigh'].includes(effort)) throw new Error('--effort must be low, medium, high or xhigh');
   if (!cwd || !fs.statSync(cwd, { throwIfNoEntry: false })?.isDirectory()) throw new Error('--cwd must be an existing directory');
   return fast ? 'priority' : 'default';
 }

@@ -1,27 +1,31 @@
 ---
 name: use-gpt-worker
-description: Run GPT workers (Codex CLI) as your subagents, instead of Claude subagents. Use when the user says "use GPT workers" or "GPT workers as subagents", for UI and computer-use testing that Claude models can't do alone (CW Agents and Customware sign-in, the user's browser Ardia, Safari, desktop apps), and for build, fix and refactor handoffs.
+description: Run GPT workers (Codex CLI) as your subagents, instead of Claude subagents. The default for every task that uses subagents, whether or not the user asks; skip only when the user explicitly asks for Haiku/Sonnet subagents. Covers parallel work, UI and computer-use testing that Claude models can't do alone (CW Agents and Customware sign-in, the user's browser Ardia, Safari, desktop apps), and for build, fix and refactor handoffs.
 ---
 
 # Use GPT Workers
 
 GPT workers are your subagents: they do the work, you split it, brief it, run it, check it and stay accountable. Never accept a worker's claim of success as evidence of success.
 
-When the user asks to use GPT workers (as subagents, or instead of subagents), this applies for the rest of the session.
+GPT workers are the default subagents for every task, without the user asking. Use Claude subagents (Haiku, Sonnet) only when the user explicitly asks for them.
 
 ## The rules
 
-1. **No Claude subagents** (Haiku, Sonnet). GPT workers replace them, and you run every worker yourself.
+1. **No Claude subagents** (Haiku, Sonnet) unless the user explicitly asks. GPT workers replace them, and you run every worker yourself.
 2. **Parallel by default.** Split the work into independent jobs (separate files, scenarios, searches, checks) and run several workers at once, each in its own background shell. Jobs that touch the same files stay in one worker.
 3. **Models** (state the choice to the user before starting):
 
    | Model | Effort | When |
    | --- | --- | --- |
-   | `gpt-6.1-terra` | `medium` | normal work, including computer use |
-   | `gpt-6.1-terra` | `high` | more complex work |
-   | `gpt-6.1-terra` | `xhigh` | UI checks: confirming a change landed, emulating a real user, and comparing screenshots whole and part by part |
-   | `gpt-6.1-sol` | `high` | after a Terra worker's output is bad or it fails twice on the same job |
-   | `gpt-6.1-sol` | `xhigh` | every review, always |
+   | `gpt-6.2-sol` | `low` | simple work without computer use: search, exploration, small edits |
+   | `gpt-6.2-sol` | `medium` | normal work without computer use: implementation, tests |
+   | `gpt-6.2-sol` | `high` | after a Sol `medium` worker's output is bad or it fails twice on the same job |
+   | `gpt-6.2-sol` | `xhigh` | every review, always |
+   | `gpt-6.1-terra` | `medium` | computer use and browser work |
+   | `gpt-6.1-terra` | `high` | more complex computer use |
+   | `gpt-6.1-terra` | `xhigh` | after a Terra `high` worker's output is bad or it fails twice on the same job; and UI checks: confirming a change landed, emulating a real user, and comparing screenshots whole and part by part |
+
+   Only Terra does Chrome/Ardia and computer use, and Terra does nothing else. Sol never drives a browser or app. Terra stays on 6.1; Sol is always 6.2.
 
 4. **Tier:** default only. Pass `--fast` (priority tier) only when the user asks.
 5. Honor an explicit model or effort request from the user. Never `max` or `ultra` (the scripts reject both).
@@ -30,7 +34,7 @@ When the user asks to use GPT workers (as subagents, or instead of subagents), t
 
 - **Never change model or effort inside a session** (it burns money). Settings are fixed at `start`.
 - On bad output or a second failure on the same job: find why it failed and what to do differently, `stop` the session, then `start` a new one on the next step with those findings in the brief.
-- Ladder: Terra `medium` → Terra `high` → Sol `high`. Start higher when the job is knowingly hard (long multi-step UI flows, flaky or stateful apps). If Sol `high` also fails, report back instead.
+- Ladders: without computer use, Sol `low`/`medium` → Sol `high`; with computer use, Terra `medium` → Terra `high` → Terra `xhigh`. Start higher when the job is knowingly hard (long multi-step UI flows, flaky or stateful apps). If the top step also fails, report back instead.
 
 ## Computer use and browsers
 
@@ -86,7 +90,7 @@ Don't use this skill when the job is faster to do yourself than to specify, or t
 Run it read-only at `xhigh`, in a background shell:
 
 ```bash
-codex exec -m gpt-6.1-sol -c model_reasoning_effort=xhigh -s read-only "<brief>" < /dev/null
+codex exec -m gpt-6.2-sol -c model_reasoning_effort=xhigh -s read-only "<brief>" < /dev/null
 ```
 
 Add `-c service_tier=priority` only when the user asks for fast.

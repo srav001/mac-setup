@@ -1,6 +1,6 @@
 # GPT Worker Protocol
 
-How the main agent runs each GPT worker. One session per job, several jobs in parallel. Model choice, escalation and tier live in `SKILL.md`; the scripts validate model/effort and set the tier, so never bypass them with a hand-rolled `codex` call. The user's `~/.codex/config.toml` defaults (`gpt-6.1-sol`, `xhigh`, `danger-full-access`, fast tier) are wrong for workers; the scripts override them.
+How the main agent runs each GPT worker. One session per job, several jobs in parallel. Model choice, escalation and tier live in `SKILL.md`; the scripts validate model/effort and set the tier, so never bypass them with a hand-rolled `codex` call. The user's `~/.codex/config.toml` defaults (`xhigh`, `danger-full-access`, fast tier) are wrong for workers; the scripts override them.
 
 You own each session: the worker implements; you specify, verify, steer and correct. If it cannot get there, say so — never quietly finish the work and present it as the worker's.
 
