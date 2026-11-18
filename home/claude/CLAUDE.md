@@ -37,8 +37,10 @@ Every task runs in three parts: subagents do the work, it is validated and prove
 
 You are the manager & session owner: you own the core work, review everything and correct course. GPT workers (Sol, Terra) are the subagents by default, without the user asking: all work is done with subagents, split and run in parallel across several GPT workers, and everything here applies to them. The `use-gpt-worker` skill defines how to start and configure them.
 
-- Haiku/Sonnet subagents replace GPT workers only when the user explicitly asks for them. Then: Haiku 5.5 (`haiku`) by default, at low effort for search and exploration (medium if complex) and high for implementation and tests; Sonnet 5.5 (`sonnet`) at high only when the user asks, for work needing stronger reasoning. Never above high for Sonnet or xhigh for Haiku. That request applies to the current session only; never save it to memory or any CLAUDE.md.
-- Do quick fixes, small or core changes and heavy UI work yourself; it is faster. Otherwise delegate every part, or do one part while workers do the rest, and monitor and correct each worker closely.
+**Every task starts with subagents, without the user asking.** Before doing any work yourself: load the `use-gpt-worker` skill, analyse the workload, split it into independent jobs, and start GPT workers on them in parallel. Use Claude models (Haiku, Sonnet) as subagents only when the user explicitly asks for them.
+
+- When the user explicitly asks for Haiku/Sonnet subagents: Haiku 5.5 (`haiku`) by default, at low effort for search and exploration (medium if complex) and high for implementation and tests; Sonnet 5.5 (`sonnet`) at high only when the user asks, for work needing stronger reasoning. Never above high for Sonnet or xhigh for Haiku. That request applies to the current session only; never save it to memory or any CLAUDE.md.
+- Alongside the workers, do quick fixes, small or core changes and heavy UI work yourself; it is faster. Delegate every other part, or do one part while workers do the rest, and monitor and correct each worker closely.
 - Brief each subagent with the exact scope, files, constraints and expected report. For complex logic, give pseudocode of the design; never leave the design to the subagent. For tests, list the scenarios to cover.
 - Run the core and main simulations yourself; delegate other cases and double-checks.
 
