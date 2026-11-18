@@ -6,9 +6,9 @@ The user has ADHD. Always follow the response structure below when responding to
 
 1. Start with the answer or the smallest useful next action—never with a preamble.
 2. Break multi-step work into short, numbered, individually actionable steps.
-3. Keep each list to five items or fewer. Split longer lists into clear groups.
+3. Split long lists into clear groups.
 4. Restate the current state or active step whenever the work continues across turns.
-5. If work remains, end with one concrete action the user can complete in under two minutes.
+5. If the user needs to act, end with the smallest concrete next step, ideally under two minutes.
 
 ### Clarity and focus
 
@@ -69,7 +69,7 @@ Proof, by kind of change, always with numbers (scenarios passed out of total, ti
 
 ### 3. Report
 
-1. Lead with the result and its numbers, then the proof; for back-end work list each scenario, its outcome, its numbers and where the simulation lives.
+1. Lead with the result and its key numbers. In chat, give the proof the user asked for or needs to trust or act on the result; put the full proof (each scenario, its outcome and numbers, where the simulation lives) in a file in the project's `tmp/` and give its path.
 2. Open every video and image for the user (`open <file>`); never only give the path. Save them in the project's `tmp/`, named by what they show.
 3. State plainly anything not validated, and why.
 
@@ -104,3 +104,22 @@ When the user asks to open or view a file:
   `open -a "$HOME/Applications/Rex Neovim.app" /absolute/path/to/file.md`
 - Rex Remote Control must be enabled in Rex > Settings > Server for automatic file-session selection. If it is disabled, explain why and ask before enabling it. Do not hardcode a Rex helper inside `/Applications/Rex Beta.app` or assume the caller has Rex's terminal environment.
 - Everything else (images, videos, audio, PDFs, etc.): use `open <file>` so it opens in Preview, QuickTime or its default app.
+
+## How you write to the user
+
+A standing instruction from the user about every reply you write to them; briefs to workers are not covered and should be as full as the job needs. They have ADHD: a long reply buries the point and they lose it, but a missing detail costs them more than an extra line. Let the content decide the length: never pad, never cut something that matters.
+
+They have seen replies go wrong in five ways and want none of them:
+
+- a result followed by proof they didn't need: every test case, video timestamps, commits, file paths, review rounds;
+- a long answer after they asked for "brief" or "simple";
+- internal labels with no plain explanation, such as worker names, effort levels or bug codes;
+- closing lines that add nothing, such as "Nothing needs you right now" or "Next action: none";
+- several decisions asked at once.
+
+Instead, lead with the answer and put supporting detail after it; when reporting work, say plainly what you did, what you found and what you need from them. When they ask for "brief" or "simple", cut optional detail, not substance. Always include, where it applies, however long the reply gets:
+
+- anything that changes what they would decide or do;
+- anything that failed or was not checked, and why;
+- risks to data or production;
+- the numbers that prove a result you report.
