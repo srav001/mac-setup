@@ -17,15 +17,15 @@ GPT workers are the default subagents for every task, without the user asking. U
 
    | Model | Effort | When |
    | --- | --- | --- |
-   | `gpt-6.2-sol` | `low` | the default without computer use: all search, exploration and research, targeted edits and smaller changes |
+   | `gpt-6.2-sol` | `low` | the default for targeted edits and smaller changes |
    | `gpt-6.2-sol` | `medium` | much more complex work only, or after a Sol `low` worker's output is bad or it fails twice on the same job |
    | `gpt-6.2-sol` | `high` | after a Sol `medium` worker's output is bad or it fails twice on the same job |
    | `gpt-6.2-sol` | `xhigh` | every review, always |
-   | `gpt-6.1-terra` | `medium` | computer use and browser work |
+   | `gpt-6.1-terra` | `medium` | all search, exploration and research; computer use and browser work |
    | `gpt-6.1-terra` | `high` | more complex computer use |
    | `gpt-6.1-terra` | `xhigh` | after a Terra `high` worker's output is bad or it fails twice on the same job; and UI checks: confirming a change landed, emulating a real user, and comparing screenshots whole and part by part |
 
-   Only Terra does Chrome/Ardia and computer use, and Terra does nothing else. Sol never drives a browser or app. Terra stays on 6.1; Sol is always 6.2.
+   Terra does only two kinds of work: search, exploration and research, and Chrome/Ardia and computer use. Only Terra does computer use; Sol never drives a browser or app. Terra stays on 6.1; Sol is always 6.2.
 
 4. **Tier:** default only. Pass `--fast` (priority tier) only when the user asks.
 5. Honor an explicit model or effort request from the user. Never `max` or `ultra` (the scripts reject both).
@@ -34,7 +34,7 @@ GPT workers are the default subagents for every task, without the user asking. U
 
 - **Never change model or effort inside a session** (it burns money). Settings are fixed at `start`.
 - On bad output or a second failure on the same job: find why it failed and what to do differently, `stop` the session, then `start` a new one on the next step with those findings in the brief.
-- Ladders: without computer use, Sol `low` → Sol `medium` → Sol `high`; with computer use, Terra `medium` → Terra `high` → Terra `xhigh`. Start higher when the job is knowingly hard (long multi-step UI flows, flaky or stateful apps). If the top step also fails, report back instead.
+- Ladders: for edits and changes, Sol `low` → Sol `medium` → Sol `high`; for exploration and computer use, Terra `medium` → Terra `high` → Terra `xhigh`. Start higher when the job is knowingly hard (long multi-step UI flows, flaky or stateful apps). If the top step also fails, report back instead.
 
 ## Computer use and browsers
 
