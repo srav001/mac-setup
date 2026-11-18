@@ -17,8 +17,8 @@ GPT workers are the default subagents for every task, without the user asking. U
 
    | Model | Effort | When |
    | --- | --- | --- |
-   | `gpt-6.2-sol` | `low` | all search, exploration and research, and small edits |
-   | `gpt-6.2-sol` | `medium` | normal work without computer use: implementation, tests |
+   | `gpt-6.2-sol` | `low` | the default without computer use: all search, exploration and research, targeted edits and smaller changes |
+   | `gpt-6.2-sol` | `medium` | much more complex work only, or after a Sol `low` worker's output is bad or it fails twice on the same job |
    | `gpt-6.2-sol` | `high` | after a Sol `medium` worker's output is bad or it fails twice on the same job |
    | `gpt-6.2-sol` | `xhigh` | every review, always |
    | `gpt-6.1-terra` | `medium` | computer use and browser work |
@@ -34,7 +34,7 @@ GPT workers are the default subagents for every task, without the user asking. U
 
 - **Never change model or effort inside a session** (it burns money). Settings are fixed at `start`.
 - On bad output or a second failure on the same job: find why it failed and what to do differently, `stop` the session, then `start` a new one on the next step with those findings in the brief.
-- Ladders: without computer use, Sol `low`/`medium` → Sol `high`; with computer use, Terra `medium` → Terra `high` → Terra `xhigh`. Start higher when the job is knowingly hard (long multi-step UI flows, flaky or stateful apps). If the top step also fails, report back instead.
+- Ladders: without computer use, Sol `low` → Sol `medium` → Sol `high`; with computer use, Terra `medium` → Terra `high` → Terra `xhigh`. Start higher when the job is knowingly hard (long multi-step UI flows, flaky or stateful apps). If the top step also fails, report back instead.
 
 ## Computer use and browsers
 
