@@ -7,7 +7,7 @@
 //   tail <dir> [chars]                  recent events      status <dir>   server up/down, turn running/idle, last activity
 //   result <dir>                        the last turn's final message only
 //   read <dir>                          full thread history (JSON)
-// start --full-access: no sandbox and no approvals; only for the T3 Code relay, never for normal workers.
+// start --full-access: no sandbox and no approvals; only for the T3 Code relay, dedicated sign-in (OTP) sessions and ardia CLI sessions, never for normal workers.
 //   stop <dir>                          shut everything down (always run this when the job ends)
 // Exit codes: 0 ok, 1 error, 2 server problem, 3 turn timed out, 4 turn failed/interrupted, 130 client signalled.
 // The server runs under a supervisor that kills it (and all its children) on `stop`, on supervisor signals,
